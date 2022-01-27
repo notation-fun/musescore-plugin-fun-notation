@@ -15,25 +15,30 @@ import QtQuick.Window 2.2
 
 MuseScore {
     version:  "1.1"
-    description: qsTr("This plugin colors notes in the selection depending on their pitch in Hooktheory Hookpad style")
-    menuPath: "Plugins.Color Notes - Hooktheory - pitch based"
+    description: qsTr("This plugin colors notes in the selection depending on their pitch in fun notation style")
+    menuPath: "Plugins.Color Notes - Fun Notation"
     
     requiresScore: false
     
     
     readonly property var colors : [ // "#rrggbb" with rr, gg, and bb being the hex values for red, green, and blue, respectively
-      "#ff0000", // I.
-      "#ffb014", // II.
-      "#efe600", // III.
-      "#00d300", // IV.
-      "#4800ff", // V.
-      "#b800e5", // VI.
-      "#ff00cb"  // VII.
+      "#EF7071", // Do
+      "#99572C", //Di, Ra
+      "#EECB16", // Re
+      "#558C7F", //Ri, Me
+      "#94D8FF", // Mi
+      "#F65EBA", // Fa
+      "#992D42", //Fi, Se
+      "#F4A963", // So
+      "#A17C2B", //Si, Le
+      "#A3DC5B", // La
+      "#5F785A", //Li, Te
+      "#8E99FF"  // Ti
       ]
     readonly property string black : "#000000"
     readonly property string gray : "#333333"
     
-    readonly property var scale : [0, , 1, , 2, 3, , 4, , 5, , 6]
+    readonly property var scale : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     readonly property var modus : [0, 2, 4, 5, 7, 9, 11]
 
     property var modalIndex : modalBox.currentIndex
@@ -62,8 +67,8 @@ MuseScore {
 
     function colorNote(note, restore) {
         console.log(note.pitch, ((note.pitch + modus[modalIndex]) % 12), ((scale[(note.pitch + modus[modalIndex] + 12 - tonalCenter) % 12] + 7 - modalIndex) % 7));
-        var color = (!restore) ? colors[(scale[(note.pitch + modus[modalIndex] + 12 - tonalCenter) % 12] + (modCenter.checkState == Qt.Checked ? (7 - modalIndex) : 0)) % 7] || gray : black;
-        //var color = (!restore) ? colors[scale[(note.pitch + modus[modalIndex] + 12 - tonalCenter) % 12]] || gray : black;
+        //var color = (!restore) ? colors[(scale[(note.pitch + modus[modalIndex] + 12 - tonalCenter) % 12]) % 7] || gray : black;
+        var color = (!restore) ? colors[scale[(note.pitch + modus[modalIndex] + 12 - tonalCenter) % 12]] || gray : black;
          
         note.color = color;
         
@@ -116,10 +121,12 @@ MuseScore {
                 id: tonalBox
                 model: ["C", "C# / Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"]
             }
+            /*
             CheckBox {
                 id: modCenter
                 text: "Modus base center"
             }
+            */
             ToolSeparator {
                 width: parent.width
                 orientation: Qt.Horizontal
@@ -131,7 +138,7 @@ MuseScore {
             ComboBox {
                 width: parent.width
                 id: modalBox
-                model: ["Major", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Minor", "Locrian"]
+                model: ["Ionian (Major)", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolion (Minor)", "Locrian"]
             }
             Button {
                 id: colorize
